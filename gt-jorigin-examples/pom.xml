@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>org.jorigin</groupId>
+		<artifactId>geotools</artifactId>
+		<version>34.3</version>
+	</parent>
+
+	<artifactId>gt-jorigin-examples</artifactId>
+	<packaging>jar</packaging>
+
+	<name>JOrigin - Geotools examples</name>
+	<description>A set of examples for the Geotools extensions provided by JOrigin</description>
+	<url>https://github.com/jorigin/geotools/</url>
+
+	<dependencies>
+
+		<!-- JavaFX – classifier selects the platform-native library jar -->
+		<!-- The "provided" scope enables user to use their own version of JavaFX -->
+		<dependency>
+			<groupId>org.openjfx</groupId>
+			<artifactId>javafx-controls</artifactId>
+			<version>${jfx.version}</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.openjfx</groupId>
+			<artifactId>javafx-swing</artifactId>
+			<version>${jfx.version}</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<!-- Jorigin - Geotools -->
+		<dependency>
+			<groupId>org.jorigin</groupId>
+			<artifactId>gt-jfx</artifactId>
+			<version>${gt.version}</version>
+		</dependency>
+
+		<!-- Jorigin - Geotools / SpatialReference -->
+		<dependency>
+			<groupId>org.jorigin</groupId>
+			<artifactId>gt-ref-spatialreference</artifactId>
+			<version>${gt.version}</version>
+		</dependency>
+
+  </dependencies>
+
+</project>

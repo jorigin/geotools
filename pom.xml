@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>org.jorigin</groupId>
+	<artifactId>geotools</artifactId>
+	<version>34.3</version>
+	<packaging>pom</packaging>
+
+	<name>JOrigin - Geotools</name>
+	<description>A set of extensions for the Geotools library</description>
+	<url>https://github.com/jorigin/geotools/</url>
+	
+	<licenses>
+		<license>
+			<name>The GNU Lesser General Public License, Version 3.0</name>
+			<url>http://www.gnu.org/licenses/lgpl-3.0.txt</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+  
+	<developers>
+		<developer>
+			<id>jseinturier</id>
+			<name>Julien Seinturier</name>
+			<email>julien.seinturier@univ-tln.fr</email>
+			<url>http://www.seinturier.fr</url>
+			<organization>University of Toulon / LIS umr CNRS 7020</organization>
+			<organizationUrl>http://www.univ-tln.fr</organizationUrl>
+			<roles>
+				<role>architect</role>
+				<role>developer</role>
+			</roles>
+			<timezone>France/Paris</timezone>
+			<properties>
+				<!-- <picUrl>http://www.example.com/jdoe/pic</picUrl> -->
+			</properties>
+		</developer>
+	</developers>
+	
+	<properties>
+	
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+		<!-- Create checksums (md5, sha1) for the artifacts during install -->
+		<createChecksum>true</createChecksum>
+
+		<maven.compiler.release>17</maven.compiler.release>
+		<maven.compiler.source>17</maven.compiler.source>
+		<maven.compiler.target>17</maven.compiler.target>
+
+		<!-- General plugins -->
+		<maven.plugin.compiler.version>3.14.0</maven.plugin.compiler.version>
+		<maven.plugin.javadoc.version>3.11.2</maven.plugin.javadoc.version>
+		<maven.plugin.source.version>3.3.1</maven.plugin.source.version>
+
+		<!-- For checksum computation -->
+		<maven.plugin.gmavenplus.version>4.3.1</maven.plugin.gmavenplus.version>
+		<maven.plugin.gmavenplus.groovy.version>5.0.3</maven.plugin.gmavenplus.groovy.version>
+
+		<!-- Artifact signature -->
+		<maven.plugin.gpg.version>3.2.8</maven.plugin.gpg.version>
+
+		<!-- Reporting -->
+		<maven.plugin.surefire.version>3.5.3</maven.plugin.surefire.version>
+		
+		<!-- JavaFX properties -->
+		<jfx.version>24</jfx.version>
+
+		<!-- Geotools properties -->
+		<gt.version>34.3</gt.version>
+	</properties>
+	
+	<modules>
+		<module>gt-jfx</module>
+		<module>gt-ref-spatialreference</module>
+		<module>gt-jorigin-examples</module>
+	</modules>
+	
+	<scm>
+		<connection>scm:git:git://github.com/jorigin/geotools.git</connection>
+		<developerConnection>scm:git:git@github.com:jorigin/geotools.git</developerConnection>
+		<url>https://github.com/jorigin/geotools</url>
+		<tag>HEAD</tag>
+	</scm>
+	
+	<!-- Depdencies specific repositories -->
+	<repositories>
+	
+		<!-- Geotools repositories from OSGE -->
+		<repository>
+			<id>osgeo</id>
+			<name>OSGeo Release Repository</name>
+			<url>https://repo.osgeo.org/repository/release/</url>
+			<snapshots><enabled>false</enabled></snapshots>
+			<releases><enabled>true</enabled></releases>
+		</repository>
+		
+		<repository>
+			<id>osgeo-snapshot</id>
+			<name>OSGeo Snapshot Repository</name>
+			<url>https://repo.osgeo.org/repository/snapshot/</url>
+			<snapshots><enabled>true</enabled></snapshots>
+			<releases><enabled>false</enabled></releases>
+		</repository>
+	</repositories>
+  
+	<dependencyManagement>
+		<dependencies>
+			<!-- Geotools BOM -->
+			<dependency>
+				<groupId>org.geotools</groupId>
+				<artifactId>gt-bom</artifactId>
+				<version>${gt.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+	<build>
+
+		<plugins>
+
+			<!--  Compile sources -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>${maven.plugin.compiler.version}</version>
+				<configuration>
+					<release>${maven.compiler.release}</release>
+					<source>${maven.compiler.source}</source>
+					<target>${maven.compiler.target}</target>
+				</configuration>
+			</plugin>
+    
+			<!-- Generate sources jar during package phase 
+				equivalent to maven sources:jar -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<version>${maven.plugin.source.version}</version>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<!-- Generate apidoc jar during package phase 
+				equivalent to maven javadoc:jar -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>${maven.plugin.javadoc.version}</version>
+		
+				<!-- Embedding Latex formulas within javadoc using MathJax-->
+				<configuration>
+
+					<additionalJOptions>
+						<additionalJOption>--allow-script-in-comments</additionalJOption>
+					</additionalJOptions>
+					<header>'&lt;script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"&gt;&lt;/script&gt;'</header>
+				</configuration>  
+        
+				<executions>
+					<execution>
+						<id>attach-javadocs</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+      
+			<!-- Sign jars -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-gpg-plugin</artifactId>
+				<version>${maven.plugin.gpg.version}</version>
+				<executions>
+					<execution>
+						<id>sign-artifacts</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>sign</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<!-- Checksums computation -->
+			<plugin>
+				<groupId>org.codehaus.gmavenplus</groupId>
+				<artifactId>gmavenplus-plugin</artifactId>
+				<version>${maven.plugin.gmavenplus.version}</version>
+
+				<dependencies>
+					<dependency>
+						<groupId>org.apache.groovy</groupId>
+						<artifactId>groovy</artifactId>
+						<version>${maven.plugin.gmavenplus.groovy.version}</version>
+						<scope>runtime</scope>
+					</dependency>
+					<dependency>
+						<groupId>org.apache.groovy</groupId>
+						<artifactId>groovy-ant</artifactId>
+						<version>${maven.plugin.gmavenplus.groovy.version}</version>
+						<scope>runtime</scope>
+					</dependency>
+				</dependencies>
+
+				<executions>
+					<execution>
+						<id>install-checksums</id>
+						<phase>install</phase>
+						<goals>
+							<goal>execute</goal>
+						</goals>
+						<configuration>
+							<scripts>
+								<script><![CDATA[
+                        import java.security.MessageDigest
+
+                        def localRepo = session.localRepository.basedir
+                        def groupPath = project.groupId.replace('.', '/')
+                        def repoDir = new File("${localRepo}/${groupPath}/${project.artifactId}/${project.version}")
+
+                        if (!repoDir.exists()) {
+                            log.warn("Répertoire du dépôt introuvable : ${repoDir}")
+                            return
+                        }
+
+                        // Algorithmes de checksum à générer
+                        def algorithms = ['MD5', 'SHA-1', 'SHA-256', 'SHA-512']
+
+                        // Extensions de fichiers checksum à exclure du traitement
+                        def excludedExtensions = ['md5', 'sha1', 'sha256', 'sha512', 'asc']
+
+                        // Fichiers internes à Maven à ignorer
+                        def excludedFiles = ['_remote.repositories', 'resolver-status.properties', 'maven-metadata-local.xml']
+
+                        // Helper pour calculer un checksum
+                        def computeChecksum = { File file, String algorithm ->
+                            def digest = MessageDigest.getInstance(algorithm)
+                            file.withInputStream { stream ->
+                                byte[] buffer = new byte[8192]
+                                int read
+                                while ((read = stream.read(buffer)) > 0) {
+                                    digest.update(buffer, 0, read)
+                                }
+                            }
+                            return digest.digest().collect { String.format('%02x', it) }.join('')
+                        }
+
+                        // Parcours de tous les fichiers du répertoire de l'artefact
+                        repoDir.eachFile { file ->
+                            if (!file.isFile()) return
+
+                            def fileName = file.name
+                            def extension = fileName.contains('.') ? fileName.substring(fileName.lastIndexOf('.') + 1) : ''
+
+                            // Ignorer les fichiers checksum existants et les fichiers Maven internes
+                            if (extension.toLowerCase() in excludedExtensions) return
+                            if (fileName in excludedFiles) return
+
+                            // Générer un checksum pour chaque algorithme
+                            algorithms.each { algo ->
+                                def suffix = algo.toLowerCase().replace('-', '')
+                                def checksumFile = new File(repoDir, "${fileName}.${suffix}")
+                                def checksum = computeChecksum(file, algo)
+                                checksumFile.text = checksum
+                                log.info("Checksum ${algo} créé : ${checksumFile.name}")
+                            }
+                        }
+                    ]]></script>
+							</scripts>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>
